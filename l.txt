@@ -1,0 +1,15 @@
+check = Check(spark, CheckLevel.Warning, "Video Game Review Check")
+
+checkResult = VerificationSuite(spark) \
+  .onData(ddf) \
+  .addCheck(
+    check.hasSize(lambda x: x >= 2000000) \
+      .hasMin("rating", lambda x: x == 1.0) \
+      .hasMax("rating", lambda x: x == 5.0)  \
+      .isComplete("user")  \
+      .isUnique("user")  \
+  ).run()
+
+checkResult_df = VerificationResult.checkResultsAsDataFrame(spark, checkResult)
+checkResult_df.show()  
+<
